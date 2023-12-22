@@ -27,6 +27,9 @@ async function run() {
 
       const userCollection = client.db("SccTaskDB").collection("users");
       const taskCollection = client.db("SccTaskDB").collection("allTask");
+
+
+
       // Get all User Data
       app.get("/users", async (req, res) => {
          const result = await userCollection.find().toArray()
