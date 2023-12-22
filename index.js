@@ -32,14 +32,26 @@ async function run() {
          const result = await userCollection.find().toArray()
          res.send(result)
       })
+
       // Post All User Data
       app.post("/users/:email", async (req, res) => {
-         const email = req.params.email
-         console.log(email)
-         const userData = req.body
-         const result = await userCollection.insertOne(userData)
-         res.send(result)
-      })
+         try {
+            const email = req.params.email;
+            const userData = req.body;
+
+            const existingUser = await userCollection.findOne({ email });
+
+            if (existingUser) {
+               return res.send({ error: "User with this email already exists" });
+            }
+
+            const result = await userCollection.insertOne(userData);
+            res.send(result);
+         } catch (error) {
+            res.send({ error: "Internal server error" });
+         }
+      });
+
 
       // Get All Task Data
       app.get("/allTask", async (req, res) => {
